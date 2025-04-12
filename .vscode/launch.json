@@ -1,0 +1,44 @@
+{
+	"configurations": [
+		{
+			"name": "main_bert_base.py",
+			"type": "debugpy",
+			"request": "launch",
+			"module": "uvicorn",
+			"args": [
+				"main_bert_base:app",
+				"--port",
+				"8080",
+				"--reload"
+			],
+			"jinja": true,
+			"justMyCode": false
+		},
+		{
+			"name": "RAGDeepSeek/rag.py",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "./RAGDeepSeek/rag.py",
+			"console": "integratedTerminal",
+			"justMyCode": false,
+			"envFile": "${workspaceFolder}/.env",
+			"env": {
+				"PYTHONPATH": "${workspaceFolder}"
+			},
+			"args": []
+		},
+		{
+			"name": "RAGDeepSeek/llm.py",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "./RAGDeepSeek/llm.py",
+			"console": "integratedTerminal",
+			"justMyCode": false,
+			"envFile": "${workspaceFolder}/.env",
+			"env": {
+				"PYTHONPATH": "${workspaceFolder}"
+			},
+			"args": []
+		},
+	]
+}

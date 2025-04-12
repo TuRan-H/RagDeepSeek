@@ -1,0 +1,63 @@
+2025-03-28 11:02:21,682 - lightrag - INFO - Created new empty graph
+2025-03-28 11:02:21,690 - lightrag - INFO - Process 56833 KV load full_docs with 0 records
+2025-03-28 11:02:21,691 - lightrag - INFO - Process 56833 KV load text_chunks with 0 records
+2025-03-28 11:02:21,691 - lightrag - INFO - Process 56833 KV load llm_response_cache with 0 records
+2025-03-28 11:02:21,691 - lightrag - INFO - Process 56833 doc status load doc_status with 0 records
+2025-03-28 11:02:27,938 - lightrag - INFO - Inserting 1 records to doc_status
+2025-03-28 11:02:27,939 - lightrag - INFO - Process 56833 doc status writting 1 records to doc_status
+2025-03-28 11:02:27,943 - lightrag - INFO - Stored 1 new unique documents
+2025-03-28 11:02:27,944 - lightrag - INFO - Storage Initialization completed!
+2025-03-28 11:02:27,945 - lightrag - INFO - Processing 1 document(s) in 1 batches
+2025-03-28 11:02:27,945 - lightrag - INFO - Start processing batch 1 of 1.
+2025-03-28 11:02:28,451 - lightrag - INFO - Inserting 1 records to doc_status
+2025-03-28 11:02:28,451 - lightrag - INFO - Process 56833 doc status writting 1 records to doc_status
+2025-03-28 11:02:28,452 - lightrag - INFO - Inserting 1 to chunks
+2025-03-28 11:02:28,452 - lightrag - INFO - Inserting 1 records to full_docs
+2025-03-28 11:02:28,452 - lightrag - INFO - Inserting 1 records to text_chunks
+2025-03-28 11:02:28,552 - lightrag - INFO - Process 56833 reloading chunks due to update by another process
+2025-03-28 11:02:49,327 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 11:03:03,853 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 11:03:03,854 - lightrag - INFO -   Chunk 1/1: extracted 15 entities and 13 relationships (deduplicated)
+2025-03-28 11:03:03,855 - lightrag - INFO - Process 56833 reloading graph chunk_entity_relation due to update by another process
+2025-03-28 11:03:03,872 - lightrag - INFO - Extracted 15 entities and 13 relationships (deduplicated)
+2025-03-28 11:03:03,872 - lightrag - INFO - Inserting 15 to entities
+2025-03-28 11:03:03,925 - lightrag - INFO - Process 56833 reloading entities due to update by another process
+2025-03-28 11:03:03,927 - lightrag - INFO - Inserting 13 to relationships
+2025-03-28 11:03:03,976 - lightrag - INFO - Process 56833 reloading relationships due to update by another process
+2025-03-28 11:03:03,980 - lightrag - INFO - Inserting 1 records to doc_status
+2025-03-28 11:03:03,980 - lightrag - INFO - Process 56833 doc status writting 1 records to doc_status
+2025-03-28 11:03:03,982 - lightrag - INFO - Process 56833 KV writting 1 records to full_docs
+2025-03-28 11:03:03,983 - lightrag - INFO - Process 56833 KV writting 1 records to text_chunks
+2025-03-28 11:03:03,984 - lightrag - INFO - Process 56833 KV writting 2 records to llm_response_cache
+2025-03-28 11:03:04,000 - lightrag - INFO - Writing graph with 15 nodes, 13 edges
+2025-03-28 11:03:04,018 - lightrag - INFO - In memory DB persist to disk
+2025-03-28 11:03:04,018 - lightrag - INFO - Completed batch 1 of 1.
+2025-03-28 11:03:04,018 - lightrag - INFO - Document processing pipeline completed
+2025-03-28 11:46:07,053 - lightrag - INFO - Loaded graph from knowledge_base/10086/graph_chunk_entity_relation.graphml with 15 nodes, 13 edges
+2025-03-28 11:46:07,058 - lightrag - INFO - Process 65745 KV load full_docs with 1 records
+2025-03-28 11:46:07,058 - lightrag - INFO - Process 65745 KV load text_chunks with 1 records
+2025-03-28 11:46:07,059 - lightrag - INFO - Process 65745 KV load llm_response_cache with 2 records
+2025-03-28 11:46:07,059 - lightrag - INFO - Process 65745 doc status load doc_status with 1 records
+2025-03-28 11:46:07,357 - lightrag - INFO - Storage Initialization completed!
+2025-03-28 11:46:09,141 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 11:46:09,141 - lightrag - INFO - Process 65745 buidling query context...
+2025-03-28 11:46:09,141 - lightrag - INFO - Query nodes: 你好, 打招呼, top_k: 60, cosine: 0.2
+2025-03-28 11:46:09,158 - lightrag - INFO - Process 65745 reloading entities due to update by another process
+2025-03-28 11:46:09,159 - lightrag - INFO - Process 65745 reloading graph chunk_entity_relation due to update by another process
+2025-03-28 11:46:09,163 - lightrag - INFO - Local query uses 15 entites, 13 relations, 1 chunks
+2025-03-28 11:46:22,578 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 11:46:22,579 - lightrag - INFO - Process 65745 KV writting 4 records to llm_response_cache
+2025-03-28 11:54:28,496 - lightrag - INFO - Loaded graph from knowledge_base/10086/graph_chunk_entity_relation.graphml with 15 nodes, 13 edges
+2025-03-28 11:54:28,501 - lightrag - INFO - Process 66168 KV load full_docs with 1 records
+2025-03-28 11:54:28,501 - lightrag - INFO - Process 66168 KV load text_chunks with 1 records
+2025-03-28 11:54:28,501 - lightrag - INFO - Process 66168 KV load llm_response_cache with 4 records
+2025-03-28 11:54:28,502 - lightrag - INFO - Process 66168 doc status load doc_status with 1 records
+2025-03-28 11:55:11,273 - lightrag - INFO - Storage Initialization completed!
+2025-03-28 12:01:29,030 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 12:01:29,030 - lightrag - INFO - Process 66168 buidling query context...
+2025-03-28 12:01:29,030 - lightrag - INFO - Query nodes: 话费, 查询, 余额, top_k: 60, cosine: 0.2
+2025-03-28 12:01:29,045 - lightrag - INFO - Process 66168 reloading entities due to update by another process
+2025-03-28 12:01:29,046 - lightrag - INFO - Process 66168 reloading graph chunk_entity_relation due to update by another process
+2025-03-28 12:01:29,052 - lightrag - INFO - Local query uses 15 entites, 13 relations, 1 chunks
+2025-03-28 12:02:42,807 - lightrag - INFO - Inserting 1 records to llm_response_cache
+2025-03-28 12:02:42,807 - lightrag - INFO - Process 66168 KV writting 6 records to llm_response_cache

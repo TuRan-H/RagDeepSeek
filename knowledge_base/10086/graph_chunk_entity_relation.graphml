@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d9" for="edge" attr.name="file_path" attr.type="string"/>
+<key id="d8" for="edge" attr.name="source_id" attr.type="string"/>
+<key id="d7" for="edge" attr.name="keywords" attr.type="string"/>
+<key id="d6" for="edge" attr.name="description" attr.type="string"/>
+<key id="d5" for="edge" attr.name="weight" attr.type="double"/>
+<key id="d4" for="node" attr.name="file_path" attr.type="string"/>
+<key id="d3" for="node" attr.name="source_id" attr.type="string"/>
+<key id="d2" for="node" attr.name="description" attr.type="string"/>
+<key id="d1" for="node" attr.name="entity_type" attr.type="string"/>
+<key id="d0" for="node" attr.name="entity_id" attr.type="string"/>
+<graph edgedefault="undirected"><node id="XXX">
+  <data key="d0">XXX</data>
+  <data key="d1">organization</data>
+  <data key="d2">XXX 是一个提供客户服务的组织，负责解答客户的疑问和办理相关业务。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="韩国">
+  <data key="d0">韩国</data>
+  <data key="d1">geo</data>
+  <data key="d2">韩国是客户可能涉及的漫游国家之一，涉及到国际通话资费和使用规则。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="XX功能">
+  <data key="d0">XX功能</data>
+  <data key="d1">category</data>
+  <data key="d2">XX功能是一项可以为客户办理的服务或功能，可能涉及收费规则和使用条款。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="XXX元/分钟">
+  <data key="d0">XXX元/分钟</data>
+  <data key="d1">category</data>
+  <data key="d2">XXX元/分钟是客户在韩国拨打国内、接听或拨打当地电话的资费标准。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="短信">
+  <data key="d0">短信</data>
+  <data key="d1">category</data>
+  <data key="d2">短信是指客户发送或接收的信息服务，涉及发送至国内或其他国家的费用。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="XXX天">
+  <data key="d0">XXX天</data>
+  <data key="d1">category</data>
+  <data key="d2">XXX天是客户办理特定套餐后可保留的有效期，与使用规则相关。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="工号XXX">
+  <data key="d0">工号XXX</data>
+  <data key="d1">person</data>
+  <data key="d2">工号XXX是客服人员的唯一标识符，用于确认身份并提供给客户。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="陈">
+  <data key="d0">陈</data>
+  <data key="d1">person</data>
+  <data key="d2">陈是客服人员的姓氏，用于回应客户对姓名的询问。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="中国大陆">
+  <data key="d0">中国大陆</data>
+  <data key="d1">geo</data>
+  <data key="d2">中国大陆是客服人员的工作地点，但具体位置不会透露给客户。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="客户">
+  <data key="d0">客户</data>
+  <data key="d1">person</data>
+  <data key="d2">客户是与XXX组织进行互动的个人，可能涉及业务咨询、办理或投诉。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="班长">
+  <data key="d0">班长</data>
+  <data key="d1">person</data>
+  <data key="d2">班长是XXX组织内部的管理人员，负责报备和支撑客服人员的工作。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="满意度相关的短信评价链接">
+  <data key="d0">满意度相关的短信评价链接</data>
+  <data key="d1">category</data>
+  <data key="d2">满意度相关的短信评价链接是客户收到的反馈工具，用于对服务进行评分。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="示忙">
+  <data key="d0">示忙</data>
+  <data key="d1">category</data>
+  <data key="d2">示忙是一种系统状态，表示客服人员暂时无法接听来电。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="漏CALL">
+  <data key="d0">漏CALL</data>
+  <data key="d1">category</data>
+  <data key="d2">漏CALL是指因未及时回拨而导致的客户来电未能成功处理的情况。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<node id="投诉">
+  <data key="d0">投诉</data>
+  <data key="d1">category</data>
+  <data key="d2">投诉是客户因解答不严谨或不完整而可能采取的行为，需要避免。</data>
+  <data key="d3">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d4">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</node>
+<edge source="XXX" target="韩国">
+  <data key="d5">9.0</data>
+  <data key="d6">XXX 提供关于韩国漫游资费的相关信息，帮助客户了解国际通话费用。</data>
+  <data key="d7">客户服务, 国际漫游</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="XX功能">
+  <data key="d5">10.0</data>
+  <data key="d6">XXX 负责为客户办理 XX 功能，并确保客户了解其收费规则。</data>
+  <data key="d7">功能办理, 收费规则</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="XXX元/分钟">
+  <data key="d5">8.0</data>
+  <data key="d6">XXX 向客户提供具体的资费标准，例如韩国拨打国内的费用为 XXX 元/分钟。</data>
+  <data key="d7">资费说明, 价格透明</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="短信">
+  <data key="d5">7.0</data>
+  <data key="d6">XXX 解释了短信发送至国内或其他国家的费用标准，并告知接收短信免费。</data>
+  <data key="d7">短信资费, 客户通知</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="XXX天">
+  <data key="d5">9.0</data>
+  <data key="d6">XXX 在介绍套餐时明确说明有效期为 XXX 天，避免客户争议。</data>
+  <data key="d7">套餐规则, 使用期限</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="工号XXX">
+  <data key="d5">8.0</data>
+  <data key="d6">工号XXX 的客服人员代表组织 XXX，为客户解答问题并提供服务。</data>
+  <data key="d7">身份确认, 客户信任</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="中国大陆">
+  <data key="d5">6.0</data>
+  <data key="d6">当客户询问工作地点时，XXX 统一解释为在中国大陆办公。</data>
+  <data key="d7">地理位置, 保密政策</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="客户">
+  <data key="d5">10.0</data>
+  <data key="d6">XXX 为客户提供服务，并根据客户需求解答疑问或办理业务。</data>
+  <data key="d7">客户服务, 业务办理</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="示忙">
+  <data key="d5">7.0</data>
+  <data key="d6">当客服人员需要离座咨询时，XXX要求点击示忙以避免客户挂机。</data>
+  <data key="d7">工作流程, 系统状态</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="漏CALL">
+  <data key="d5">6.0</data>
+  <data key="d6">XXX通过规范客服人员的操作流程来减少漏CALL的发生。</data>
+  <data key="d7">呼叫管理, 漏接控制</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="XXX" target="投诉">
+  <data key="d5">9.0</data>
+  <data key="d6">XXX通过提供完整、严谨的解答来降低客户投诉的风险。</data>
+  <data key="d7">风险控制, 投诉管理</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="客户" target="满意度相关的短信评价链接">
+  <data key="d5">8.0</data>
+  <data key="d6">客户通过满意度相关的短信评价链接对XXX提供的服务进行评分。</data>
+  <data key="d7">服务评价, 客户反馈</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+<edge source="客户" target="班长">
+  <data key="d5">7.0</data>
+  <data key="d6">当客服人员需要离座时，需向班长报备，确保客户服务不受影响。</data>
+  <data key="d7">内部管理, 客户服务</data>
+  <data key="d8">chunk-35ae34861d74b57c2816858f41990dee</data>
+  <data key="d9">/mnt/sdb/TuRan/Project/RagDeepSeek/data/10086.txt</data>
+</edge>
+</graph></graphml>
