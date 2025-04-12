@@ -36,9 +36,13 @@ knowledge_base/
 results/
 temp/
 
+# files
+models
+main_bert_base.py
+main_bert_base_backup.py
+
 # packages
 fastapi-*
-models
 
 # IDE
 .vscode/
