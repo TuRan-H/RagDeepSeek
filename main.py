@@ -1,23 +1,13 @@
-import os
-import sys
+import os, sys
 import asyncio
 from collections import defaultdict
-from typing import Union, Callable
-from pathlib import Path
 
-import shutil
 import uvicorn
-from fastapi import FastAPI, Form, Request, Query, UploadFile, File, Depends
-from fastapi.responses import PlainTextResponse, HTMLResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI
 from pydantic import BaseModel
 
-import numpy as np
 import torch
-from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
-from torch.utils.data.distributed import DistributedSampler
-from tqdm import tqdm, trange
+import numpy as np
 
 from RAGDeepSeek.utils import Config, MultiQaItem
 from RAGDeepSeek.rag import load_RAG, query_RAG
