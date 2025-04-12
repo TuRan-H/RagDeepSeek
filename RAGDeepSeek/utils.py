@@ -15,15 +15,14 @@ class MultiQaItem(BaseModel):
 @dataclass
 class Config:
     working_dir: str = field(metadata={"help": "Working directory"})
-    language_model: str = field(metadata={"help": "The name or path used in RAG framework"})
     loading_method: str = field(
         metadata={
             "help": "The method for loading language model, include `hf`, `api` and `ollama`"
         },
     )
     companyid: str = field(metadata={"help": "The company id for the user"})
+    language_model: str = field(metadata={"help": "The name or path used in RAG framework"})
     embedding_model: str = field(
-        default="/newSSD/home/TuRan/Downloads/models/all-MiniLM-L6-v2",
         metadata={"help": "The name for embedding model"},
     )
     embedding_dim: int = field(default=384)

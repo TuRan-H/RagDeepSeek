@@ -11,6 +11,11 @@ from RAGDeepSeek.llm import load_model_hf, load_model_api_ollama, ollama_request
 from RAGDeepSeek.utils import Config
 from RAGDeepSeek.prompt import SYSTEMMESSAGE
 
+from lightrag.prompt import PROMPTS
+from RAGDeepSeek.prompt import KEYWORDS_EXTRACTION
+
+PROMPTS['keywords_extraction'] = KEYWORDS_EXTRACTION
+
 
 async def load_RAG(config: Config):
     """
@@ -82,11 +87,13 @@ async def query_RAG(rag: LightRAG, query: str, config: Config, history_messages:
         ),
     )
 
-    match_result = re.search(pattern=r"```\n\s\s\s\s-----Sources-----\n.+```", string=rag_response, flags=re.DOTALL)
-    if match_result:
-        rag_response = rag_response[: match_result.start()] + rag_response[match_result.end() :]
+    if rag_response != "":
+        match_result = re.search(
+            pattern=r"```\n\s\s\s\s-----Sources-----\n.+```", string=rag_response, flags=re.DOTALL
+        )  # type: ignore
+        if match_result:
+            rag_response = rag_response[: match_result.start()] + rag_response[match_result.end() :]  # type: ignore
 
-    # TODO 根据LightRAG官方的SYSTEMMESSAGE模版修改
     system_prompt = SYSTEMMESSAGE.format(
         RAG_response=rag_response,
         max_answer_length=config.max_answer_length,
@@ -123,24 +130,29 @@ if __name__ == "__main__":
     #     working_dir="./knowledge_base/meadjohnson",
     # )
 
-    # # 测试ollama
-    # config = Config(
-    #     working_dir="./knowledge_base/meadjohnson",
-    #     loading_method="ollama",
-    #     language_model="llama3.1:latest",
-    #     companyid="meadjohnson",
-    # )
-
-    # 测试api
+    # 测试ollama
     config = Config(
         working_dir="./knowledge_base/meadjohnson",
         loading_method="ollama",
-        language_model="gemma3:27b",
         companyid="meadjohnson",
+        language_model="gemma3:27b",
+        embedding_model="/mnt/sdb/TuRan/Downloads/models/all-MiniLM-L6-v2",
         rag_process_context_with_llm=False,
         query_mode="local",
-        max_answer_length=100
+        max_answer_length=100,
     )
+
+    # # 测试api
+    # config = Config(
+    #     working_dir="./knowledge_base/meadjohnson",
+    #     loading_method="api",
+    #     companyid="meadjohnson",
+    #     language_model="qwen-plus",
+    #     embedding_model="/mnt/sdb/TuRan/Downloads/models/all-MiniLM-L6-v2",
+    #     rag_process_context_with_llm=False,
+    #     query_mode="local",
+    #     max_answer_length=100,
+    # )
 
     # 运行协程
     async def main():

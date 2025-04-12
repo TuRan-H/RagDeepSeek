@@ -34,9 +34,11 @@ async def ollama_request_model_generate(
 
     request_data = {
         "model": model,
-        "messages": [],  # ! 这里请求体中message是复数messages
+        "messages": [],  # ! 注意typo问题, 这里请求体中message是复数messages
         "stream": False,
-        "num_predict": num_predict,
+        "options": {
+            "num_predict": num_predict
+        }
     }
 
     if system_prompt:
@@ -57,7 +59,6 @@ async def ollama_request_model_generate(
     except aiohttp.ClientError as e:
         raise RuntimeError(f"api请求失败: {e}")
     
-    # TODO 这里好像除了一些bug, 删内容删的不干净
     if "deepseek" in model:
         response_text = delete_deepseek_thinking(response_text)
 
