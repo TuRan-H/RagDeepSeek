@@ -34,6 +34,7 @@ data/
 models/
 knowledge_base/
 results/
+temp/
 
 # packages
 fastapi-*
