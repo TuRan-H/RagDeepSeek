@@ -38,6 +38,7 @@ temp/
 
 # packages
 fastapi-*
+models
 
 # IDE
 .vscode/
