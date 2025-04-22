@@ -8,7 +8,7 @@ from lightrag.kg.shared_storage import initialize_pipeline_status
 from lightrag.base import StoragesStatus
 
 from RAGDeepSeek.llm import load_model_hf, load_model_api_ollama, ollama_request_model_generate
-from RAGDeepSeek.utils import Config
+from RAGDeepSeek.utils import MultiQAConfig
 from RAGDeepSeek.prompt import SYSTEMMESSAGE
 
 from lightrag.prompt import PROMPTS
@@ -17,7 +17,7 @@ from RAGDeepSeek.prompt import KEYWORDS_EXTRACTION
 PROMPTS['keywords_extraction'] = KEYWORDS_EXTRACTION
 
 
-async def load_RAG(config: Config):
+async def load_RAG(config: MultiQAConfig):
     """
     加载RAG模型
 
@@ -71,7 +71,7 @@ async def index_documents(rag: LightRAG, documents: list):
     await asyncio.gather(*tasks)
 
 
-async def query_RAG(rag: LightRAG, query: str, config: Config, history_messages: list = []):
+async def query_RAG(rag: LightRAG, query: str, config: MultiQAConfig, history_messages: list = []):
     """
     使用RAG处理query, 返回结果
 
@@ -83,7 +83,8 @@ async def query_RAG(rag: LightRAG, query: str, config: Config, history_messages:
     rag_response = await rag.aquery(
         query=query,
         param=QueryParam(
-            mode=config.query_mode, only_need_context=not config.rag_process_context_with_llm
+            mode=config.query_mode, only_need_context=not config.rag_process_context_with_llm,
+            conversation_history=config.history
         ),
     )
 
@@ -131,15 +132,14 @@ if __name__ == "__main__":
     # )
 
     # 测试ollama
-    config = Config(
+    config = MultiQAConfig(
         working_dir="./knowledge_base/meadjohnson",
         loading_method="ollama",
         companyid="meadjohnson",
         language_model="gemma3:27b",
         embedding_model="/mnt/sdb/TuRan/Downloads/models/all-MiniLM-L6-v2",
-        rag_process_context_with_llm=False,
         query_mode="local",
-        max_answer_length=100,
+        max_answer_length=-1,
     )
 
     # # 测试api
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         # await index_documents(rag, ["./data/meadjohnson.txt"])
         result = await query_RAG(
             rag,
-            "我想给宝宝换一罐奶粉, 有什么推荐的吗?",
+            "我想买一罐奶粉, 有什么推荐的吗?",
             config=config,
         )
         return result

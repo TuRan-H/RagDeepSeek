@@ -8,7 +8,7 @@ from lightrag.llm.hf import hf_embed, initialize_hf_model
 from lightrag.llm.openai import openai_complete_if_cache
 from lightrag.utils import EmbeddingFunc, locate_json_string_body_from_string
 
-from RAGDeepSeek.utils import Config, delete_deepseek_thinking
+from RAGDeepSeek.utils import MultiQAConfig, delete_deepseek_thinking
 
 
 async def ollama_request_model_generate(
@@ -36,9 +36,7 @@ async def ollama_request_model_generate(
         "model": model,
         "messages": [],  # ! 注意typo问题, 这里请求体中message是复数messages
         "stream": False,
-        "options": {
-            "num_predict": num_predict
-        }
+        "options": {"num_predict": num_predict},
     }
 
     if system_prompt:
@@ -58,7 +56,7 @@ async def ollama_request_model_generate(
                 response_text = response_result['message']['content']
     except aiohttp.ClientError as e:
         raise RuntimeError(f"api请求失败: {e}")
-    
+
     if "deepseek" in model:
         response_text = delete_deepseek_thinking(response_text)
 
@@ -135,7 +133,7 @@ async def hf_model_generate(
     return response_text
 
 
-def load_model_hf(config: Config):
+def load_model_hf(config: MultiQAConfig):
     """
     使用huffingface方式本地加载模型语言模型
 
@@ -183,7 +181,7 @@ def load_model_hf(config: Config):
     return llm_model_func, embedding_func
 
 
-def load_model_api_ollama(config: Config):
+def load_model_api_ollama(config: MultiQAConfig):
     """
     使用api加载模型语言模型
 
@@ -271,10 +269,13 @@ if __name__ == "__main__":
     # print(asyncio.run(test()))
 
     # 测试ollma的request生成
-    config = Config(
+    config = MultiQAConfig(
         working_dir="temp",
         loading_method="ollama",
+        companyid="0",
         language_model="llama3.1:latest",
+        embedding_model="0",
+        max_token_size=5000,
     )
     from RAGDeepSeek.prompt import SYSTEMMESSAGE
 

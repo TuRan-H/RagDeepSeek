@@ -9,7 +9,8 @@ from pydantic import BaseModel
 import torch
 import numpy as np
 
-from RAGDeepSeek.utils import Config, MultiQaItem
+from RAGDeepSeek.utils import MultiQAConfig, MultiQaItem, MultiIntentItem, MultiIntentConfig
+from RAGDeepSeek.intent_detection import IntentDetection
 from RAGDeepSeek.rag import load_RAG, query_RAG
 
 
@@ -17,10 +18,6 @@ from RAGDeepSeek.rag import load_RAG, query_RAG
 rag_instances, rag_instances_lock = dict(), defaultdict(asyncio.Lock)
 user, user_instance_lock = dict(), defaultdict(asyncio.Lock)
 app = FastAPI()
-
-
-class nlp_Item(BaseModel):
-    question: str
 
 
 class clf_asr_Item(BaseModel):
@@ -68,13 +65,15 @@ async def multi_qa(item: MultiQaItem):
 
     # 根据userid动态创建Config实例
     async with user_instance_lock[item.userid]:
-        user[item.userid] = Config(
+        user[item.userid] = MultiQAConfig(
             working_dir=os.path.join("knowledge_base", item.companyid),
-            language_model="qwen-plus",
-            loading_method="api",
+            loading_method="ollama",
+            language_model="gemma3:27b",
+            embedding_model="/mnt/sdb/TuRan/Downloads/models/all-MiniLM-L6-v2",
             companyid=item.companyid,
-            max_answer_length=item.max_answer_length,
             query_mode="local",
+            max_answer_length=item.max_answer_length,
+            # rag_process_context_with_llm=False,
         )
 
     # 根据companyid动态创建RAG实例
@@ -132,5 +131,19 @@ async def multi_qa(item: MultiQaItem):
     }
 
 
+@app.post("/nlp/multiQAIntent/")
+async def multi_intent_detection(item: MultiIntentItem):
+    config = MultiIntentConfig(
+        loading_method="ollama",
+        language_model="gemma3:27b",
+        hyper_alpha=0.3,
+        hyper_beta=0.7,
+    )
+    intent_detection = IntentDetection(config)
+    return intent_detection.multi_predict(
+        file_name=item.filename
+    )
+
+
 if __name__ == '__main__':
-    uvicorn.run(app='main_bert_base:app', host='127.0.0.1', port=8080, reload=True, workers=3)
+    uvicorn.run(app='main:app', host='127.0.0.1', port=8080, reload=True, workers=3)
