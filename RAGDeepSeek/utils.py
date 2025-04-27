@@ -1,22 +1,23 @@
 import os
 import re
-from dataclasses import dataclass, field
+import json
 
+from dataclasses import dataclass, field
 from pydantic import BaseModel, Field
 
 
 @dataclass
 class IntentDetectionExample:
     conversation_history: str
-    Confidence: str
-    Weight: str
+    Confidence: int
+    Weight: int
+    Intent: str
 
     def __str__(self):
         return (
             "-----\n"
-            f"Example:\n"
             f"Conversation History: \"{self.conversation_history}\"\n"
-            f"Model Response: {{\"Confidence\": {self.Confidence}, \"Weight\": {self.Weight}}}\n"
+            f"Model Response: {{\"Confidence\": {self.Confidence}, \"Weight\": {self.Weight}, \"Intent\": \"{self.Intent}\"}}\n"
             "-----"
         )
 
@@ -27,8 +28,9 @@ class IntentDetectionResult:
     用来存储单轮意图识别的输出结果
     """
 
-    Confidence: str
-    Weight: str
+    Confidence: float
+    Weight: float
+    Intent: str
 
 
 class MultiIntentResult(BaseModel):
@@ -109,7 +111,7 @@ class MultiQAConfig:
     )
     responsed_language: str = field(default="简体中文", metadata={"help": "语言模型使用的语言"})
     max_answer_length: int = field(
-        default=2048, metadata={"help": "The max length of model response"}
+        default=100, metadata={"help": "The max length of model response"}
     )
     history: list = field(default_factory=list, metadata={"help": "Conversation history"})
     query_mode: str = field(
@@ -157,5 +159,46 @@ def delete_deepseek_thinking(input_text):
     return input_text
 
 
+def parse_llm_json_output(text: str):
+    """
+    从LLM输出的代码块中提取并解析JSON
+    """
+    # 匹配```json 和 ``` 之间的内容
+    pattern = r'```(?:json)?\s*\n(.*?)\n```'
+    match = re.search(pattern, text, re.DOTALL)
+
+    # 如果有代码块标记, 则提取其中的Josn字符串并解析
+    if match:
+        json_str = match.group(1)
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            try:
+                return eval(json_str)
+            except:
+                raise Exception("Failed to parse JSON or eval string")
+    # 如果没有代码块标记，尝试直接解析
+    else:
+        try:
+            return json.loads(text)
+        except:
+            try:
+                return eval(text)
+            except:
+                return Exception("Failed to parse JSON or eval string")
+
+
 if __name__ == "__main__":
-    pass
+    # intent = IntentDetectionExample(
+    #     conversation_history="SalesPerson: 请问您想要订阅我们的产品吗? Customer: 抱歉, 我不感兴趣",
+    #     Confidence=0.1,
+    #     Weight=0.9,
+    #     Intent="不感兴趣",
+    # )
+    # print(intent.__str__())
+
+    string = """```json\n{"Confidence": 0.3, "Weight": 0.8, "Intention": "询问货物详情，尚未明确同意承运"}\n```"""
+    print(string)
+    output = parse_llm_json_output(string)
+    print(output)
+    type(output)

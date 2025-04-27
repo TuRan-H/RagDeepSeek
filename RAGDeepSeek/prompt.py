@@ -63,10 +63,11 @@ You are an expert in intent recognition.
 Based on the following conversation between the customer and the salesperson, determine whether the customer agrees with the current sales proposal.
 You need to output two parameters:
 - Confidence: A value between 0 and 1, indicating the customer's level of agreement with the sales proposal. The higher the value, the more the customer agrees.
-- Weight: A value between 0 and 1, indicating the model's confidence in its prediction. The higher the value, the more certain the model is about its prediction.
+- Weight: A value between 0 and 1, indicating the importance or impact of this round of conversation on the customer's final decision. The higher the value, the greater the contribution of this conversation to the final deal.
+- Intent: A brief summary of the customer’s intent in Chinese.
 
 Please return a JSON object with the structure:
-{{'Confidence': '', 'Weight': ''}}
+{{"Confidence": '', "Weight": '', "Intent": ''}}
 
 # Examples
 {examples}
@@ -80,17 +81,20 @@ Your Answer:
 INTENT_DETECTION_EXAMPLES = [
     IntentDetectionExample(
         conversation_history="SalesPerson: 请问您想要订阅我们的产品吗? Customer: 抱歉, 我不感兴趣",
-        Confidence="0.1",
-        Weight="0.9",
+        Confidence=0.1,
+        Weight=0.9,
+        Intent="明确拒绝订阅产品"
     ),
     IntentDetectionExample(
         conversation_history="SalesPerson: 您对我们的产品有什么意见吗? Customer: 我觉得产品的质量很好",
-        Confidence="0.8",
-        Weight="0.9",
+        Confidence=0.7,
+        Weight=0.6,
+        Intent="对产品质量表示认可，但未明确同意购买"
     ),
     IntentDetectionExample(
         conversation_history="SalesPerson: 请问您有意向承运本次订单吗? Customer: 我需要考虑一下",
-        Confidence="0.4",
-        Weight="0.8",
+        Confidence=0.4,
+        Weight=0.7,
+        Intent="需要时间考虑，未立即同意"
     ),
 ]

@@ -1,12 +1,21 @@
+"""
+TODO 改成开放式的意图识别
+"""
+
 from typing import List
 import json
 
 import numpy as np
-from open_intent_classifier.model import Classifier
 from openai import OpenAI
 
 
-from RAGDeepSeek.utils import MultiIntentConfig, IntentDetectionResult, MultiIntentResult
+from RAGDeepSeek.utils import (
+    MultiIntentConfig,
+    IntentDetectionResult,
+    MultiIntentResult,
+    delete_deepseek_thinking,
+    parse_llm_json_output,
+)
 from RAGDeepSeek.prompt import INTENT_DETECTION_EXAMPLES, INTENT_DETECTION_TEMPLATE
 
 
@@ -23,7 +32,7 @@ def map_confidence_to_intent(confidence: float) -> str:
         return "强烈不同意"
 
 
-class IntentDetection(Classifier):
+class IntentDetection:
     def __init__(
         self,
         config: MultiIntentConfig,
@@ -34,6 +43,7 @@ class IntentDetection(Classifier):
         Args:
             config (MultiIntentConfig): 参数配置
         """
+        self.config = config
         self.client = OpenAI(api_key=config.api_key, base_url=config.base_url)
         self.model_name = config.language_model
         self.few_shot_examples = INTENT_DETECTION_EXAMPLES.copy()
@@ -57,14 +67,33 @@ class IntentDetection(Classifier):
 
         prompt = INTENT_DETECTION_TEMPLATE.format(examples=examples_str, text=text)
 
-        completion = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-        )
+        if "deepseek" in self.config.language_model:
+            completion = (
+                self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format={"type": "text"},
+                )
+                .choices[0]
+                .message.content
+            )
+            completion = delete_deepseek_thinking(completion)
+            response_dict = parse_llm_json_output(completion)
+        else:
+            completion = (
+                self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format={"type": "json_object"},
+                )
+                .choices[0]
+                .message.content
+            )
+            completion = eval(completion)
 
-        response_dict = eval(completion.choices[0].message.content)
-        return IntentDetectionResult(response_dict["Confidence"], response_dict["Weight"])
+        return IntentDetectionResult(
+            response_dict["Confidence"], response_dict["Weight"], response_dict["Intent"]
+        )
 
     def multi_predict(self, file_name) -> MultiIntentResult:
         """
@@ -95,13 +124,13 @@ class IntentDetection(Classifier):
                 i += 1
 
         # 计算单轮对话的意图和语言模型输出的权重
-        llm_weight_list = list()
-        confidence_list = list()
+        llm_weight_list, confidence_list, intention_list = list(), list(), list()
         try:
             for conversation in conversation_history:
                 result = self.round_predict(conversation)
                 confidence_list.append(result.Confidence)
                 llm_weight_list.append(result.Weight)
+                intention_list.append(result.Intent)
         except Exception as e:
             return MultiIntentResult(
                 success=False,
@@ -116,13 +145,11 @@ class IntentDetection(Classifier):
             confidence += float(c) * float(w)
 
         # 将float类型的confidence转化为str类型的intent
-        for i in range(len(confidence_list)):
-            confidence_list[i] = map_confidence_to_intent(float(confidence_list[i]))
         confidence = map_confidence_to_intent(float(confidence))
 
         return MultiIntentResult(
             success=True,
-            content_intent=confidence_list.__str__(),
+            content_intent=intention_list.__str__(),
             global_intent=confidence,
         )
 
@@ -160,7 +187,7 @@ class IntentDetection(Classifier):
 if __name__ == "__main__":
     config = MultiIntentConfig(
         loading_method="ollama",
-        language_model="gemma3:27b",
+        language_model="deepseek-r1:14b",
     )
     intent_detection = IntentDetection(config=config)
     print(intent_detection.multi_predict("./data/intent_detection.jsonl"))

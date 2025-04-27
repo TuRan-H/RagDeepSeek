@@ -22,11 +22,14 @@ conda create -n RAGDeepSeek python==3.10.*
 
 安装依赖
 ```
+pip install fastapi-0.87.0-py3-none-any.whl
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip install transformers==4.50.1
 pip install lightrag-hku==1.2.6
 pip install open-intent-classifier==0.0.8
-pip install pandas, dotenv, tiktoken, pipmaster, future, uvicorn
+pip install pandas dotenv tiktoken pipmaster future uvicorn
+pip install openai==1.69.0
+pip install aiohttp
 ```
 
 
