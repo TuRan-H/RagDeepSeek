@@ -89,7 +89,7 @@ class IntentDetection:
                 .choices[0]
                 .message.content
             )
-            completion = eval(completion)
+            response_dict = json.loads(completion)
 
         return IntentDetectionResult(
             response_dict["Confidence"], response_dict["Weight"], response_dict["Intent"]
