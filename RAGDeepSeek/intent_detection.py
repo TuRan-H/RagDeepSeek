@@ -1,7 +1,3 @@
-"""
-TODO 改成开放式的意图识别
-"""
-
 from typing import List
 import json
 

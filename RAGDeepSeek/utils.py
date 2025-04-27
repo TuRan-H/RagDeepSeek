@@ -89,6 +89,15 @@ class MultiQaItem(BaseModel):
     query: str = Field(description="user query")
     max_answer_length: int = Field(default=100, description="模型输出的最大长度")
 
+class MultiQAResult(BaseModel):
+    """
+    多轮问答的返回数据
+    """
+
+    success: bool = Field(description="是否成功")
+    model_response: str = Field(description="模型的输出")
+    error_message: str = Field(description="错误信息")
+
 
 @dataclass
 class MultiQAConfig:
@@ -173,19 +182,13 @@ def parse_llm_json_output(text: str):
         try:
             return json.loads(json_str)
         except json.JSONDecodeError:
-            try:
-                return eval(json_str)
-            except:
-                raise Exception("Failed to parse JSON or eval string")
+            return eval(json_str)
     # 如果没有代码块标记，尝试直接解析
     else:
         try:
             return json.loads(text)
         except:
-            try:
-                return eval(text)
-            except:
-                return Exception("Failed to parse JSON or eval string")
+            return eval(text)
 
 
 if __name__ == "__main__":
