@@ -42,9 +42,6 @@ main_bert_base.py
 main_bert_base_backup.py
 run.sh
 
-# packages
-fastapi-*
-
 # IDE
 .vscode/
 .idea/
