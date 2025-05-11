@@ -1,58 +1,50 @@
 import os
 import re
 import json
-
 from dataclasses import dataclass, field
+
+import torch
 from pydantic import BaseModel, Field
 
 
 @dataclass
-class IntentDetectionExample:
-    conversation_history: str
-    Confidence: int
-    Weight: int
-    Intent: str
-
-    def __str__(self):
-        return (
-            "-----\n"
-            f"Conversation History: \"{self.conversation_history}\"\n"
-            f"Model Response: {{\"Confidence\": {self.Confidence}, \"Weight\": {self.Weight}, \"Intent\": \"{self.Intent}\"}}\n"
-            "-----"
-        )
-
-
-@dataclass
-class IntentDetectionResult:
+class IntentRecognitionConfig:
     """
-    用来存储单轮意图识别的输出结果
+    意图识别的配置文件
     """
 
-    Confidence: float
-    Weight: float
-    Intent: str
+    model_path: str = field(
+        default="./results/lr_0.001_epoch_3_model_Llama-3.1-8B-Instruct_time_20_30_38",
+        metadata={"help": "模型的存放路径"},
+    )
+    max_length: int = field(default=256)
+    device_map: str = field(
+        default="cpu",
+        metadata={"help": "模型的设备映射, 包括 `auto`, `cpu`, `cuda`"},
+    )
 
 
-class MultiIntentResult(BaseModel):
+class IntentRecognitionItem(BaseModel):
     """
-    多轮意图识别的返回数据
+    意图识别的输入数据
+    非 `中性`, `同意`, `不同意` 这种简单的意图识别
+    而是在给定的多个标签中将用户的query分类到特定标签的意图识别
+    """
+
+    query: str = Field(description="用户的query")
+
+
+class IntentRecognitionResult(BaseModel):
+    """
+    意图识别 (IntentRecognitionItem) 的返回数据
     """
 
     success: bool = Field(description="是否成功")
-    content_intent: str = Field(description="每一句话的识别意图")
-    global_intent: str = Field(description="全局的总意图")
-
-
-class MultiIntentItem(BaseModel):
-    """
-    多轮意图识别的输入数据
-    """
-
-    filename: str = Field(description="包含多轮对话的意图识别文件名")
+    intent: str = Field(description="意图识别的结果")
 
 
 @dataclass
-class MultiIntentConfig:
+class MultiIntentDetectionConfig:
     """
     多轮意图识别的配置文件
     """
@@ -79,25 +71,33 @@ class MultiIntentConfig:
             self.api_key = "ollama"
 
 
-class MultiQaItem(BaseModel):
+@dataclass
+class SingleIntentDetectionResult:
     """
-    多轮问答的输入数据
+    用来存储单轮意图识别的输出结果
     """
 
-    userid: str = Field(description="user id")
-    companyid: str = Field(description="user company id")
-    query: str = Field(description="user query")
-    max_answer_length: int = Field(default=100, description="模型输出的最大长度")
+    Confidence: float
+    Weight: float
+    Intent: str
 
 
-class MultiQAResult(BaseModel):
+class MultiIntentDetectionItem(BaseModel):
     """
-    多轮问答的返回数据
+    多轮意图识别的输入数据
+    """
+
+    filename: str = Field(description="包含多轮对话的意图识别文件名")
+
+
+class MultiIntentDetectionResult(BaseModel):
+    """
+    多轮意图识别的返回数据
     """
 
     success: bool = Field(description="是否成功")
-    model_response: str = Field(description="模型的输出")
-    error_message: str = Field(description="错误信息")
+    content_intent: str = Field(description="每一句话的识别意图")
+    global_intent: str = Field(description="全局的总意图")
 
 
 @dataclass
@@ -155,6 +155,27 @@ class MultiQAConfig:
         else:
             self.base_url = "http://127.0.0.1:11434/v1"
             self.api_key = "ollama"
+
+
+class MultiQAItem(BaseModel):
+    """
+    多轮问答的输入数据
+    """
+
+    userid: str = Field(description="user id")
+    companyid: str = Field(description="user company id")
+    query: str = Field(description="user query")
+    max_answer_length: int = Field(default=100, description="模型输出的最大长度")
+
+
+class MultiQAResult(BaseModel):
+    """
+    多轮问答的返回数据
+    """
+
+    success: bool = Field(description="是否成功")
+    model_response: str = Field(description="模型的输出")
+    error_message: str = Field(description="错误信息")
 
 
 def delete_deepseek_thinking(input_text):

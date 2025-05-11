@@ -6,9 +6,9 @@ from openai import OpenAI
 
 
 from RAGDeepSeek.utils import (
-    MultiIntentConfig,
-    IntentDetectionResult,
-    MultiIntentResult,
+    MultiIntentDetectionConfig,
+    SingleIntentDetectionResult,
+    MultiIntentDetectionResult,
     delete_deepseek_thinking,
     parse_llm_json_output,
 )
@@ -28,10 +28,10 @@ def map_confidence_to_intent(confidence: float) -> str:
         return "强烈不同意"
 
 
-class IntentDetection:
+class MultiIntentDetection:
     def __init__(
         self,
-        config: MultiIntentConfig,
+        config: MultiIntentDetectionConfig,
     ):
         """
         生成式意图识别
@@ -46,7 +46,7 @@ class IntentDetection:
         self.alpha = config.hyper_alpha
         self.beta = config.hyper_beta
 
-    def round_predict(self, text: str) -> IntentDetectionResult:
+    def round_predict(self, text: str) -> SingleIntentDetectionResult:
         """
         单轮意图识别
 
@@ -87,11 +87,11 @@ class IntentDetection:
             )
             response_dict = json.loads(completion)
 
-        return IntentDetectionResult(
+        return SingleIntentDetectionResult(
             response_dict["Confidence"], response_dict["Weight"], response_dict["Intent"]
         )
 
-    def multi_predict(self, file_name) -> MultiIntentResult:
+    def multi_predict(self, file_name) -> MultiIntentDetectionResult:
         """
         多轮意图识别
 
@@ -128,7 +128,7 @@ class IntentDetection:
                 llm_weight_list.append(result.Weight)
                 intention_list.append(result.Intent)
         except Exception as e:
-            return MultiIntentResult(
+            return MultiIntentDetectionResult(
                 success=False,
                 content_intent="[]",
                 global_intent="",
@@ -143,7 +143,7 @@ class IntentDetection:
         # 将float类型的confidence转化为str类型的intent
         confidence = map_confidence_to_intent(float(confidence))
 
-        return MultiIntentResult(
+        return MultiIntentDetectionResult(
             success=True,
             content_intent=intention_list.__str__(),
             global_intent=confidence,
@@ -181,9 +181,9 @@ class IntentDetection:
 
 
 if __name__ == "__main__":
-    config = MultiIntentConfig(
+    config = MultiIntentDetectionConfig(
         loading_method="ollama",
         language_model="deepseek-r1:14b",
     )
-    intent_detection = IntentDetection(config=config)
+    intent_detection = MultiIntentDetection(config=config)
     print(intent_detection.multi_predict("./data/intent_detection.jsonl"))

@@ -9,8 +9,8 @@ from typing import cast, List
 from datetime import datetime
 from dataclasses import dataclass, field, asdict
 import re
+from datetime import datetime
 
-import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from datasets import load_dataset, Dataset
@@ -19,7 +19,6 @@ from transformers import (
     AutoTokenizer,
     HfArgumentParser,
     TrainingArguments,
-    DataCollatorForLanguageModeling,
     BitsAndBytesConfig,
     LlamaForCausalLM,
     LlamaTokenizer,
@@ -65,24 +64,18 @@ if "torch" in _.modules:
 
 @dataclass
 class SFTTrainingArguments:
-    output_dir: str = field(default="./results/SFTDeepSeek")
     num_train_epochs: int = field(default=3)
     per_device_train_batch_size: int = field(default=2)
     gradient_accumulation_steps: int = field(default=4)
     learning_rate: float = field(default=1e-4)
     remove_unused_columns: bool = field(default=True)
-    run_name: str = field(default="DeepSeek-R1-Distill-Llama-8B")
+    run_name: str = field(default="fine_tune_deepseek")
     max_grad_norm: float = field(default=0.3)
-
-    def __post_init__(self):
-        now = datetime.now().timestamp()
-        formatted_time = datetime.fromtimestamp(now).strftime("%m-%d-%H-%M-%S")
-        self.run_name = formatted_time
 
 
 @dataclass
 class ModelArguments:
-    # TODO LoRA的超参, 建议保持默认, 如果显存不够可以修改target_modules
+    # ! LoRA的超参, 建议保持默认, 如果显存不够可以修改target_modules
     lora_alpha: int = field(default=16, metadata={"help": "使用LoRA包装模型时的lora_alpha参数"})
     lora_dropout: float = field(
         default=0.1, metadata={"help": "使用LoRA包装模型时的lora_dropout参数"}
@@ -97,7 +90,7 @@ class ModelArguments:
         metadata={"help": "使用LoRA包装模型时的target_modules参数"},
     )
     max_length: int = field(default=256, metadata={"help": "模型训练时允许模型生成的token最大长度"})
-    # TODO 如果显存还是不够, 将use_quantization改为True, 对模型启用量化, 但是量化可能会导致模型的性能下降
+    # ! 如果显存还是不够, 将use_quantization改为True, 对模型启用量化, 但是量化可能会导致模型的性能下降
     use_quantization: bool = field(
         default=False, metadata={"help": "是否使用BitsAndBytes来进行量化"}
     )
@@ -114,7 +107,7 @@ class ModelArguments:
 class DataArguments:
     data_path: str = field(default="./data/intent_recog_data_v2.csv")
     model_path: str = field(default="./models/DeepSeek-R1-Distill-Llama-8B")
-    saved_dir: str = field(default="./results")
+    save_dir: str = field(default="./results", metadata={"help": "模型保存的目录"})
 
 
 def get_model_tokenizer(
@@ -168,7 +161,7 @@ def get_model_tokenizer(
             use_cache=False,
         )
 
-    # TODO 如果使用LoRA包装模型, 模型的embedding层会被冻结, 需要显式的启用输入的require_grads()
+    # ! 如果使用LoRA包装模型, 模型的embedding层会被冻结, 需要显式的启用输入的require_grads()
     if hasattr(model, "enable_input_require_grads"):
         model.enable_input_require_grads()
 
@@ -189,10 +182,12 @@ def get_model_tokenizer(
 
 def get_trainer(
     training_args: SFTTrainingArguments,
-    model,
-    tokenizer,
-    train_set,
-    test_set,
+    model_args: ModelArguments,
+    data_args: DataArguments,
+    model: LlamaForCausalLM,
+    tokenizer: LlamaTokenizer,
+    train_set: Dataset,
+    test_set: Dataset,
 ):
     """
     获取训练器
@@ -216,7 +211,7 @@ def get_trainer(
         processing_class=tokenizer,
         args=TrainingArguments(
             run_name=training_args.run_name,
-            output_dir=training_args.output_dir,
+            output_dir=data_args.save_dir,
             num_train_epochs=training_args.num_train_epochs,
             per_device_train_batch_size=training_args.per_device_train_batch_size,
             gradient_accumulation_steps=training_args.gradient_accumulation_steps,
@@ -256,7 +251,7 @@ def get_dataset(data_args: DataArguments):
         train_set: 训练集
         test_set: 测试集
     """
-    # TODO 这里需要提供 RAGDeepSeek/SFTDataset.py 的路径, 如果相对路径不正确, 使用绝对路径
+    # ! 这里需要提供 RAGDeepSeek/SFTDataset.py 的路径, 如果相对路径不正确, 使用绝对路径
     all_dataset = load_dataset(
         "./RAGDeepSeek/SFTDataset.py", data_dir=data_args.data_path, trust_remote_code=True
     )
@@ -271,8 +266,8 @@ def get_dataset(data_args: DataArguments):
 
 def inference(
     query: str,
-    model_args: ModelArguments,
-    data_args: DataArguments,
+    model_path: str,
+    max_length: int,
     model: LlamaForCausalLM,
     tokenizer: LlamaTokenizer,
 ):
@@ -294,16 +289,22 @@ def inference(
     inputs = tokenizer(query, return_tensors="pt")
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
 
-    genreation_config = GenerationConfig.from_pretrained(data_args.model_path)
+    genreation_config = GenerationConfig.from_pretrained(model_path)
     genreation_config.pad_token_id = tokenizer.eos_token_id
-    genreation_config.max_length = model_args.max_length
+    genreation_config.max_length = max_length
 
     with torch.no_grad():
         outputs = model.generate(**inputs, generation_config=genreation_config)
 
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    return response
+    match = re.search(r"### Real Data ###.+Your response:(.+)", response, re.DOTALL)
+    if match:
+        result = match.group(1).strip()
+    else:
+        result = ""
+
+    return result
 
 
 def evaluate(
@@ -383,15 +384,16 @@ if __name__ == "__main__":
         cast(DataArguments, data_args),
     )
 
-    # 设置日志
     now = datetime.now().timestamp()
-    formatted_time = datetime.fromtimestamp(now).strftime("%Y-%m-%d %H:%M:%S")
+    formatted_time = datetime.fromtimestamp(now).strftime("%H_%M_%S")
+    training_args.run_name = f"lr_{training_args.learning_rate}_epoch_{training_args.num_train_epochs}_model_{os.path.basename(data_args.model_path)}_time_{formatted_time}"
+    data_args.save_dir = os.path.join(data_args.save_dir, training_args.run_name)
 
-    # TODO 如果不想用wandb观察训练状态, 则直接注释掉下面这段代码
-    run = wandb.init(
+    # ! 如果不想用wandb观察训练状态, 则直接注释掉下面这段代码
+    wandb.init(
         project=os.getenv("WANDB_PROJECT", None),
         entity=os.getenv("WANDB_ENTITY", None),
-        name=f"RUN {formatted_time}",
+        name=training_args.run_name,
         config={
             "_data_args": asdict(data_args),
             "_model_args": asdict(model_args),
@@ -407,38 +409,52 @@ if __name__ == "__main__":
 
     trainer = get_trainer(
         training_args=training_args,
+        model_args=model_args,
+        data_args=data_args,
         model=model,
         tokenizer=tokenizer,
         train_set=train_set,
         test_set=test_set,
     )
 
+
     print("**************************************************inference before training")
+    print("query: 你好啊\nresult: ")
     print(
         inference(
-            model_args=model_args,
-            data_args=data_args,
+            model_path=data_args.model_path,
+            max_length=model_args.max_length,
             model=model,
             tokenizer=tokenizer,
             query="你好啊",
-        )
+        ),
+        "\n",
     )
-    print("**************************************************inference before training")
 
     # 训练
     trainer.train()
 
+    # 将LoRA的权重合并到模型中
+    merged_model: LlamaForCausalLM = model.merge_and_unload()  # type: ignore
+
     print("**************************************************inference after training")
+    print("query: 不知道\nresult: ")
     print(
         inference(
-            model_args=model_args,
-            data_args=data_args,
-            model=model,
+            model_path=data_args.model_path,
+            max_length=model_args.max_length,
+            model=merged_model,
             tokenizer=tokenizer,
             query="不知道",
-        )
+        ),
+        "\n",
     )
-    print("**************************************************inference after training")
 
-    accuracy = evaluate(model_args, data_args, model, tokenizer, test_set)
-    run.log({"accuracy": accuracy})
+    accuracy = evaluate(model_args, data_args, merged_model, tokenizer, test_set)
+    print("**************************************************accuracy")
+    print(f"accuracy: {accuracy}\n")
+    wandb.log(data={"accuracy": accuracy})
+
+    # 保存模型
+    merged_model.save_pretrained(data_args.save_dir)
+    tokenizer.save_pretrained(data_args.save_dir)

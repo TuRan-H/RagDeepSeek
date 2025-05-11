@@ -2,18 +2,24 @@ import os, sys
 import asyncio
 from collections import defaultdict
 
+import torch
 import uvicorn
 from fastapi import FastAPI
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 from RAGDeepSeek.utils import (
+    IntentRecognitionConfig,
+    IntentRecognitionItem,
+    IntentRecognitionResult,
     MultiQAConfig,
-    MultiQaItem,
-    MultiIntentItem,
-    MultiIntentConfig,
+    MultiQAItem,
     MultiQAResult,
+    MultiIntentDetectionItem,
+    MultiIntentDetectionConfig,
 )
-from RAGDeepSeek.intent_detection import IntentDetection
+from RAGDeepSeek.intent_detection import MultiIntentDetection
 from RAGDeepSeek.rag import load_RAG, query_RAG
+from RAGDeepSeek.SFTDeepSeek import inference
 
 
 # rag实例字典, rag实例锁
@@ -23,7 +29,7 @@ app = FastAPI()
 
 
 @app.post("/nlp/multiQA/")
-async def multi_qa(item: MultiQaItem):
+async def multi_qa(item: MultiQAItem):
     """
     基于Rag+deepseek实现语义匹配（实现客户提问的问题答案匹配）
     """
@@ -108,15 +114,62 @@ async def multi_qa(item: MultiQaItem):
 
 
 @app.post("/nlp/multiQAIntent/")
-async def multi_intent_detection(item: MultiIntentItem):
-    config = MultiIntentConfig(
+async def multi_intent_detection(item: MultiIntentDetectionItem):
+    config = MultiIntentDetectionConfig(
         loading_method="ollama",
         language_model="deepseek-r1:14b",
         hyper_alpha=0.3,
         hyper_beta=0.7,
     )
-    intent_detection = IntentDetection(config)
+    intent_detection = MultiIntentDetection(config)
     return intent_detection.multi_predict(file_name=item.filename)
+
+
+@app.on_event("startup")
+async def intent_recognition_start_up():
+    """
+    针对 `intent_recognition` 的startup事件, 在应用启动时加载模型
+    """
+    # ! 注意修改模型地址, max_length保持256
+    # ! 默认有GPU使用GPU, 没有GPU使用CPU. 如果想使用GPU则指定 device_map="auto" (auto代表模型并行, 即模型的不同部分被分片到不同的GPU上)
+    app.state.intent_recognition_config = IntentRecognitionConfig(
+        model_path="./results/lr_0.001_epoch_3_model_Llama-3.1-8B-Instruct_time_20_30_38",
+        max_length=256,
+        device_map="auto" if torch.cuda.is_available() else "cpu",
+    )
+    app.state.intent_recognition_model = AutoModelForCausalLM.from_pretrained(
+        app.state.intent_recognition_config.model_path,
+        device_map=app.state.intent_recognition_config.device_map,
+    )
+    app.state.intent_recognition_tokenizer = AutoTokenizer.from_pretrained(
+        app.state.intent_recognition_config.model_path
+    )
+
+
+@app.post("/nlp/IntentRecognition/")
+async def intent_recognition(item: IntentRecognitionItem):
+
+    try:
+        intent = inference(
+            query=item.query,
+            model_path=app.state.intent_recognition_config.model_path,
+            max_length=app.state.intent_recognition_config.max_length,
+            model=app.state.intent_recognition_model,
+            tokenizer=app.state.intent_recognition_tokenizer,
+        )
+    except Exception as e:
+        return IntentRecognitionResult(
+            success=False,
+            intent="",
+        )
+
+    if not intent:
+        return IntentRecognitionResult(
+            success=False,
+            intent="",
+        )
+
+    return IntentRecognitionResult(success=True, intent=intent)
 
 
 if __name__ == '__main__':

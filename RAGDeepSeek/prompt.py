@@ -1,4 +1,20 @@
-from RAGDeepSeek.utils import IntentDetectionExample
+from dataclasses import dataclass
+
+
+@dataclass
+class IntentDetectionExample:
+    conversation_history: str
+    Confidence: int
+    Weight: int
+    Intent: str
+
+    def __str__(self):
+        return (
+            "-----\n"
+            f"Conversation History: \"{self.conversation_history}\"\n"
+            f"Model Response: {{\"Confidence\": {self.Confidence}, \"Weight\": {self.Weight}, \"Intent\": \"{self.Intent}\"}}\n"
+            "-----"
+        )
 
 
 SYSTEMMESSAGE = """# Role
@@ -83,18 +99,18 @@ INTENT_DETECTION_EXAMPLES = [
         conversation_history="SalesPerson: 请问您想要订阅我们的产品吗? Customer: 抱歉, 我不感兴趣",
         Confidence=0.1,
         Weight=0.9,
-        Intent="明确拒绝订阅产品"
+        Intent="明确拒绝订阅产品",
     ),
     IntentDetectionExample(
         conversation_history="SalesPerson: 您对我们的产品有什么意见吗? Customer: 我觉得产品的质量很好",
         Confidence=0.7,
         Weight=0.6,
-        Intent="对产品质量表示认可，但未明确同意购买"
+        Intent="对产品质量表示认可，但未明确同意购买",
     ),
     IntentDetectionExample(
         conversation_history="SalesPerson: 请问您有意向承运本次订单吗? Customer: 我需要考虑一下",
         Confidence=0.4,
         Weight=0.7,
-        Intent="需要时间考虑，未立即同意"
+        Intent="需要时间考虑，未立即同意",
     ),
 ]
