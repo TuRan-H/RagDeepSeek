@@ -35,12 +35,14 @@ models/
 knowledge_base/
 results/
 temp/
+wandb/
 
 # files
 models
 main_bert_base.py
 main_bert_base_backup.py
 run.sh
+.env
 
 # IDE
 .vscode/

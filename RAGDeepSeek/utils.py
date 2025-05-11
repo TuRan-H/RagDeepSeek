@@ -89,6 +89,7 @@ class MultiQaItem(BaseModel):
     query: str = Field(description="user query")
     max_answer_length: int = Field(default=100, description="模型输出的最大长度")
 
+
 class MultiQAResult(BaseModel):
     """
     多轮问答的返回数据
