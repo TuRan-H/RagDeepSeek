@@ -396,7 +396,7 @@ if __name__ == "__main__":
             "_data_args": asdict(data_args),
             "_model_args": asdict(model_args),
             "_training_args": asdict(training_args),
-        }
+        },
     )
 
     # 加载模型和tokenizer
@@ -441,5 +441,4 @@ if __name__ == "__main__":
     print("**************************************************inference after training")
 
     accuracy = evaluate(model_args, data_args, model, tokenizer, test_set)
-    print(accuracy)
     run.log({"accuracy": accuracy})
