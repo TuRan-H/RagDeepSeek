@@ -29,13 +29,14 @@ ENV/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# data files
+# floders
 data/
 models/
 knowledge_base/
 results/
 temp/
 wandb/
+config/
 
 # files
 models
