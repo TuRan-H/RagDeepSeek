@@ -106,7 +106,7 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     data_path: str = field(default="./data/intent_recog_data_v2.csv")
-    model_path: str = field(default="./models/DeepSeek-R1-Distill-Llama-8B")
+    model_path: str = field(default="/mnt/sdb/TuRan/Downloads/models/DeepSeek-R1-Distill-Llama-8B")
     save_dir: str = field(default="./results", metadata={"help": "模型保存的目录"})
 
 

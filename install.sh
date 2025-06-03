@@ -8,6 +8,7 @@ if [ -f .env ]; then
 fi
 
 
+# 确保fastapi whl文件存在
 pip install fastapi-0.87.0-py3-none-any.whl
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip install transformers==4.46.0
