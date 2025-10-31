@@ -1,39 +1,39 @@
-# 配置python环境
-安装python
+# Configure Python Environment
+Install Python
 ```
 conda create -n RAGDeepSeek python==3.10.*
 ```
 
-安装依赖
+Install dependencies
 ```
 bash install.sh
 ```
 
-# 运行微调代码
-首先在配置文件目录 `./config/default_config.json` 中填写 `model_path` 字段<br>
-填写上从huggingface上下载的模型的地址, 服务器文件位于 `/newSSD/home/TuRan/Downloads/models/DeepSeek-R1-Distill-Llama-8B`
+# Run Fine-tuning Code
+First, fill in the `model_path` field in the configuration file `./config/default_config.json`.
+Fill in the address of the model downloaded from Hugging Face. The server file is located at `/newSSD/home/TuRan/Downloads/models/DeepSeek-R1-Distill-Llama-8B`.
 
 
-在代码的工作目录 `/newSSD/home/TuRan/Projects/RagDeepSeek` 上, 运行下面代码
+In the working directory of the code `/newSSD/home/TuRan/Projects/RagDeepSeek`, run the following code:
 ```
 conda activate RAGDeepSeek
 python RAGDeepSeek/SFTDeepSeek.py config/default_config.json
 ```
 
-# 运行主文件
-## 意图识别
-在运行 `main.py` 之前, 需要对一些字段进行特殊配置
+# Run Main File
+## Intent Recognition
+Before running `main.py`, some fields need to be specially configured.
 
-在 `main.py` 的 `intent_recognition_start_up` 函数中, 填写已经训练好的模型的地址
+In the `intent_recognition_start_up` function of `main.py`, fill in the address of the trained model.
 
-已经训练好了两个模型, 存放在 `/newSSD/home/TuRan/Downloads/models/lr_0.001_epoch_3_model_DeepSeek-R1-Distill-Llama-8B_time_23_02_54` 目录中 <br>
-一个是根据 `Llama3.1` 微调得来, 另一个是根据 `DeepSeek-R1` 微调得来. `fine-tuned Llama3.1` 最终accuracy在89%左右, `fine-tuned DeepSeek-R1` 最终accuracy在85%左右
+Two models have been trained and are stored in the `/newSSD/home/TuRan/Downloads/models/lr_0.001_epoch_3_model_DeepSeek-R1-Distill-Llama-8B_time_23_02_54` directory.
+One is fine-tuned based on `Llama3.1`, and the other is fine-tuned based on `DeepSeek-R1`. The final accuracy of `fine-tuned Llama3.1` is about 89%, and the final accuracy of `fine-tuned DeepSeek-R1` is about 85%.
 
 ```
 bash run.sh
 ```
 
-## 多轮意图识别
+## Multi-turn Intent Recognition
 ```
 bash run.sh
 ```
